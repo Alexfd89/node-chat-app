@@ -11,10 +11,6 @@ socket.on('connect', function(){
     });
 });
 
-socket.on('joinedUser', function(message){
-    console.log(message);
-});
-
 socket.on('disconnect', function(){
     console.log('Disconnected from server');
 });
@@ -23,9 +19,6 @@ socket.on('newMessage', function(newMessage){
     console.log('New Message', newMessage);
 });
 
-socket.on('adminMessage', function(message){
-    console.log(message);
-});
 
 socket.on('newEmail', function(email){
     console.log('New Email', email);
