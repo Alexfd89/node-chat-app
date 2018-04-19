@@ -9,11 +9,6 @@ socket.on('connect', function(){
         text: 'Hey, This is Client',
         from: 'Client@mail.com'
     });
-
-    socket.emit('createMessage', {
-        from: 'Client',
-        text: 'Hey This is a new message from the client'
-    })
 });
 
 socket.on('disconnect', function(){

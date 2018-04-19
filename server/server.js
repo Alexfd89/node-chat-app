@@ -24,12 +24,6 @@ io.on('connection', (socket) => {
         createdAt: 123
     });
 
-    socket.emit('newMessage', {
-        from: 'Server@mail.com',
-        text: 'Hey Client, this is a new message from the server',
-        createdAt: new Date()
-    });
-
     //Getting event from the client
     socket.on('createEmail', (newEmail) => {
         console.log('createEmail', newEmail);
@@ -39,8 +33,14 @@ io.on('connection', (socket) => {
         console.log('User was disconnected');
     });
 
-    socket.on('createMessage', (newMessage) => {
-        console.log('createMessage', newMessage);
+    socket.on('createMessage', (message) => {
+        console.log('createMessage', message);
+
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
     });
 });
 
