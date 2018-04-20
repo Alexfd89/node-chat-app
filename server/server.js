@@ -17,19 +17,6 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New user connected');
 
-    //Sending event to Client
-    socket.emit('newEmail', {
-        from: 'Server@mail.com',
-        to: 'Client@mail.com',
-        text: 'Hey, Whats going on?',
-        createdAt: 123
-    });
-
-    //Getting event from the client
-    socket.on('createEmail', (newEmail) => {
-        console.log('createEmail', newEmail);
-    });
-
     socket.on('disconnect', () => {
         console.log('User was disconnected');
     });
@@ -38,11 +25,11 @@ io.on('connection', (socket) => {
 
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
-    socket.on('createMessage', (message) => {
+    socket.on('createMessage', (message, callback) => {
         console.log('createMessage', message);
-        
-        io.emit('newMessage', generateMessage(message.from, message.text));
 
+        io.emit('newMessage', generateMessage(message.from, message.text));
+        callback('This is from the server');
         // socket.broadcast.emit('newMessage', {
         //     from: message.from,
         //     text: message.text,
@@ -54,3 +41,17 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log(`Started up at port ${port}`);
 });
+
+
+//Sending event to Client
+    // socket.emit('newEmail', {
+    //     from: 'Server@mail.com',
+    //     to: 'Client@mail.com',
+    //     text: 'Hey, Whats going on?',
+    //     createdAt: 123
+    // });
+
+    //Getting event from the client
+    // socket.on('createEmail', (newEmail) => {
+    //     console.log('createEmail', newEmail);
+    // });
