@@ -1,18 +1,29 @@
 var socket = io();
 
 socket.on('connect', function(){
-    console.log('Connected to server');
-
-    //Sending event to the server
-    // socket.emit('createEmail', {
-    //     to: 'Server@mail.com',
-    //     text: 'Hey, This is Client',
-    //     from: 'Client@mail.com'
-    // });
+    var params = $.deparam(window.location.search);
+    socket.emit('join', params, function(err){
+        if(err){
+            swal(err);
+            window.location.href = '/';   
+        }else{
+            console.log('No error');
+        }
+    });
 });
 
 socket.on('disconnect', function(){
     console.log('Disconnected from server');
+});
+
+socket.on('updateUserList', function(users) {
+    var ol = $('<ol></ol>');
+
+    users.forEach(function(user){
+        ol.append($('<li></li>').text(user));
+    });
+
+    $('#users').html(ol);
 });
 
 socket.on('newMessage', function(message){
@@ -26,11 +37,6 @@ socket.on('newMessage', function(message){
 
     $('#messages').append(html);
     scrollToBottom();
-    
-    // console.log('New Message', message);
-    // var li = $('<li></li>');
-    // li.text(`${message.from} ${formattedTime}:  ${message.text}`);
-    // $('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function(message){
@@ -57,7 +63,6 @@ $('#message-form').on('submit', function(e){
     var messageTextBox = $('[name=message]');
 
     socket.emit('createMessage', {
-        from: 'User',
         text: messageTextBox.val()
     }, function(){
         messageTextBox.val('');
